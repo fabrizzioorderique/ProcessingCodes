@@ -3,7 +3,7 @@ int b = 0;
 int c = 0;
 
 void setup(){
-  fullScreen();
+  size(2500,2000);
 }
 
 void draw(){
@@ -11,5 +11,6 @@ void draw(){
   textSize(150);
   stroke(255);
   textAlign(CENTER);
-  text("iTs sImPLe AlGebRa",width/2,height/2);
+  translate(width/2,height/2);
+text("F",0,0);
 }
