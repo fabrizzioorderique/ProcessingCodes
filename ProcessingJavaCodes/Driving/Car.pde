@@ -10,8 +10,8 @@ class Car{
     ypos = 0;
     xspeed = 5;
     yspeed = 5;
-    xacc = 0;
-    yacc = 0;
+    xacc = 0.3;
+    yacc = 0.3;
     print("Car is at: ",xpos,ypos+" ");
   }
   Car(float xpos, float ypos){
@@ -35,6 +35,7 @@ class Car{
   public void move(){
     if(upHeld){
       ypos-=yspeed;
+      yspeed -= yacc;
     }
     if(leftHeld){
       //xpos-=xspeed;
@@ -42,6 +43,7 @@ class Car{
     }
     if(downHeld){
       ypos+=yspeed;
+      yspeed += yacc;
     }
     if(rightHeld){
      //xpos+=xspeed;
