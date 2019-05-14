@@ -1,8 +1,11 @@
 Ball ball;
+Basket goal;
 void setup() {
-  size(600, 800);
-  frameRate(60);
+  size(3000, 1800);
+  //fullScreen();
+  //frameRate(500);
   ball = new Ball();
+  goal = new Basket();
 }
 
 void draw() {
@@ -12,19 +15,33 @@ void draw() {
   pushMatrix();
     translate(ball.r/2, height-ball.r/2);
     ball.showBall();
+    goal.showBasket();
     ball.move();
   popMatrix();
+  if(goalReached()){
+    ball.canMove = false;
+    textSize(50);
+    textAlign(CENTER);
+    text("Game Finished",width/2,height/2);
+  }
 }
 
 void mousePressed(){
-  ball.v = 0.01*ball.power.mag();
-  ball.angle = degrees(PVector.angleBetween(ball.power, ball.horizon));
-  ball.power.x = ball.power.y = 0;
-  ball.xVel = ball.v*cos(radians(ball.angle));
-  ball.yVel = -1*ball.v*sin(ball.angle);
-  println("vel: " + ball.v);
-  println("angle: " + ball.angle);
+  ball.xVel = 0.05*ball.power.x;
+  ball.yVel = 0.05*ball.power.y;
+  println("powerX: " + ball.power.x);
+  println("powerY: " + ball.power.y);
   println("xVel: " + ball.xVel);
   println("yVel: " + ball.yVel);
   ball.canMove = true;
+  ball.canShowV = false;
+}
+
+boolean goalReached() {
+  if(ball.x > (goal.x - goal.s) && ball.x < (goal.x + goal.s)){
+    if(ball.y > (goal.y - goal.s) && ball.y < (goal.y + goal.s)){
+        return true;
+    }
+  }
+  return false;
 }
