@@ -1,10 +1,18 @@
 class Basket{
-  float x = random(ball.nWidthZero+200,ball.nWidthMax);
-  float y= random(ball.nHeightZero,ball.nHeightMax);
-  float s = 50;
+  float x;
+  float y;
+  float s;
+  color c;
+  
+  Basket(color c){
+    x = random(ball.nWidthZero+200,ball.nWidthMax);
+    y= random(ball.nHeightZero,ball.nHeightMax);
+    s = 50;
+    this.c = c;
+  }
   
   void showBasket(){
-    fill(255);
+    fill(c);
     rectMode(CENTER);
     rect(x,y,s,s);
   }
