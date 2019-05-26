@@ -3,7 +3,8 @@ int b = 0;
 int c = 0;
 
 void setup(){
-  size(2500,2000);
+  //size(2500,2000);
+  fullScreen();
 }
 
 void draw(){
@@ -12,5 +13,5 @@ void draw(){
   stroke(255);
   textAlign(CENTER);
   translate(width/2,height/2);
-text("F",0,0);
+text("Virus detected... Hard RESET in progress",0,0);
 }

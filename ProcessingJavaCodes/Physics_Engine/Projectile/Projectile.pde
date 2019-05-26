@@ -3,6 +3,7 @@ Basket goal;
 Basket[] baskets;
 float start, ms;
 int currentTime;
+int score = 0;
 void setup() {
   size(1500, 900);
   //fullScreen();
@@ -26,6 +27,8 @@ void draw() {
     baskets[i].showBasket();
   }
   ball.move();
+  textSize(50);
+  text("Score: " + score, ball.nWidthZero + 120, ball.nHeightZero +50);
   if(goalReached() || basketsReached()){
     ball.canMove = false;
     textSize(40); 
@@ -43,7 +46,7 @@ void draw() {
     text("(press space to reset)",ball.nWidthMax/2,ball.nHeightMax/2 - 5);
   }else{
     textSize(50);
-    text(currentTime, ball.nWidthZero + 30, ball.nHeightZero +50);
+    text(currentTime, ball.nWidthZero + 1300, ball.nHeightZero +50);
     println(currentTime);
   }
 }
@@ -51,19 +54,20 @@ void draw() {
 void mousePressed(){
   ball.xVel = 0.05*ball.power.x;
   ball.yVel = 0.05*ball.power.y;
-  println("powerX: " + ball.power.x);
-  println("powerY: " + ball.power.y);
-  println("xVel: " + ball.xVel);
-  println("yVel: " + ball.yVel);
   ball.canMove = true;
   ball.canShowV = false;
 }
 
 void keyPressed(){
-  if(keyCode == ENTER){
+  if(keyCode == ENTER ){
     start = millis();
   } 
   if(keyCode == ' '){
+    if(goalReached()){
+      score++;
+    }else{
+      score = 0;
+    }
     resetGame();
     start = millis();
   } 
