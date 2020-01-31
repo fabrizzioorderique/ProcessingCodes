@@ -6,8 +6,8 @@
 */
 import java.util.*;
 AmplitudeLine myLine = new AmplitudeLine(100);
+AmplitudeLine boundary = new AmplitudeLine(620);
 ArrayList<Dot> dots = new ArrayList<Dot>(0);
-ArrayList<Dot> ref = new ArrayList<Dot>(0);
 float t = 0.0;
 float dt = 0.1;
 float amplitude = 100;
@@ -18,7 +18,7 @@ boolean draggable = false;
 
 
 void setup(){
-  size(3000,1200);  
+  size(3000,2000);  
 }
 void draw(){
   //redraws background and axis every time
@@ -28,6 +28,8 @@ void draw(){
   pushMatrix();
     translate(0,height/2);
     myLine.display();
+    boundary.setColor(255);
+    boundary.display();
     //does let amplitude fall below 0
     if(draggable && mouseY-height/2 < radius*0.05 && mouseY-height>-1*(height+0.2*myLine.getH()+radius)){
       myLine.setAmp(-1*(mouseY-height/2));
@@ -66,6 +68,7 @@ void addReference(){
 //action methods
 void mouseClicked(){
   canMove = true;
+  println(mouseY-height/2);
 }
 //draggability of amplitude line
 void mouseDragged(){
