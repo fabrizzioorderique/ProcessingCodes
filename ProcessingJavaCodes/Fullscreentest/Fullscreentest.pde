@@ -13,5 +13,6 @@ void draw(){
   stroke(255);
   textAlign(CENTER);
   translate(width/2,height/2);
-text("Virus detected... Hard RESET in progress",0,0);
+  text("Hello Isabel",0,0);
+  
 }
