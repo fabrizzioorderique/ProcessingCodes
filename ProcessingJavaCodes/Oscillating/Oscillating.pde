@@ -4,23 +4,29 @@
 *@author Piero Orderique
 *@date January 03 2020
 */
-import java.util.*;
-AmplitudeLine myLine = new AmplitudeLine(100);
-AmplitudeLine boundary = new AmplitudeLine(620);
-Button moveButton = new Button(2600, 800, 200, 100, #196E98);
-int moveStatus = 0;
+import java.util.ArrayList;
 ArrayList<Dot> dots = new ArrayList<Dot>(0);
 float t = 0.0;
 float dt = 0.1;
 float amplitude = 100;
 float frequency = 1;
-float radius = 50;
+float radius = 40;
 boolean canMove = false;
 boolean draggable = false;
+AmplitudeLine myLine = new AmplitudeLine(amplitude);
+AmplitudeLine boundary = new AmplitudeLine(620);
+Button moveButton = new Button(2600, 800, 200, 100, #196E98, "Move");
+Button resetButton = new Button(2600, -800, 200, 100, #BC0606, "RESET");
 
 
 void setup(){
   size(3000,2000);  
+      //creates the initial, non moving dots 
+    for(int i = 0; i < width/radius; i++){
+      //x coor gets shifted, amplitudes start at different points 
+      dots.add(new Dot(i*radius,myLine.getAmp()*sin(frequency*(t+i)),radius));
+      
+    }
 }
 void draw(){
   //redraws background and axis every time
@@ -33,17 +39,16 @@ void draw(){
     boundary.setColor(255);
     boundary.display();
     moveButton.display();
+    resetButton.display();
+    for(Dot d : dots){
+      d.display();
+    }
     //does let amplitude fall below 0 or go above the boundary line
     if(draggable && mouseY-height/2 < radius*0.05 && 
        mouseY-height>-1*(height+0.2*myLine.getH()+radius) && -1*(mouseY-height/2)<600){
       myLine.setAmp(-1*(mouseY-height/2));
     }
-    //creates the initial, non moving dots 
-    for(int i = 0; i < width/radius; i++){
-      //x coor gets shifted, amplitudes start at different points 
-      dots.add(new Dot(i*radius,myLine.getAmp()*sin(frequency*(t+i)),radius));
-      dots.get(i).display();
-    }
+
     //addReference();
     //allows movement when "canMove" is enabled
     if(canMove){
@@ -69,33 +74,36 @@ void addReference(){
     ellipse(i*rad,myLine.getAmp()*sin(i*-5.822),rad,rad);
   }
 }
-boolean isMouseOver(color c) {
-  // If processing pixels array is null (we didn't call loadPixels yet)
-  // call loadPixels() to fill processing pixels array 
-  if(pixels == null) {
-    loadPixels();
-    return false;
-  } else {   
-   // Otherwise, if we already get pixels in memory
-   // check if mouse over pixel's color is equal to the given color
-    if(pixels[(mouseY*width) + mouseX] == c) {
-      return true;
+
+  void updateButton(Button c){
+    //resetButton
+    if(c == resetButton){
+      canMove = false;
+      myLine.setAmp(amplitude);
+      for(int i = 0; i < dots.size(); i++){
+        dots.get(i).setY(myLine.getAmp()*sin(frequency*(t+i)));
+      }
     }
-    else {
-      return false;
+    //moveButton
+    if(c == moveButton){
+      if(c.state % 2 == 0){
+        canMove = true;
+      }else{
+      canMove = false;
+      }
     }
   }
-}
 /*--------------------------------------action methods----------------------------------*/
 void mouseClicked(){
-  if(isMouseOver(#196E98)) {
-    println("button clicked");
+  if(moveButton.mouseOver()) {
+    println("Move button clicked");
     moveButton.state++;
+    updateButton(moveButton);
   }
-  if(moveButton.state % 2 == 0){
-    canMove = true;
-  }else{
-    canMove = false;
+  if(resetButton.mouseOver()){
+    println("Reset button clicked");
+    resetButton.state++;
+    updateButton(resetButton);
   }
 }
 //draggability of amplitude line
@@ -105,7 +113,6 @@ void mouseDragged(){
   if(mouseY-height/2<-1*(myLine.getAmp()+radius/2) && 
      mouseY-height/2<-1*(myLine.getAmp()+radius/2+myLine.getH())){
     draggable = true;
-    print(draggable);
   }
 }
 void mouseReleased(){

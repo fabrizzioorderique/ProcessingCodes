@@ -29,7 +29,8 @@ void draw(){
 }
 
 boolean overButton(){
-  if(mouseX <= (width/2 + 50) && mouseX >= (width/2 - 50) && mouseY <= (height/2 + 50) && mouseY >= (height/2 - 50)){
+  if(mouseX <= (width/2 + 50) && mouseX >= (width/2 - 50) && 
+     mouseY <= (height/2 + 50) && mouseY >= (height/2 - 50)){
     return true;
   }else{
     return false;
