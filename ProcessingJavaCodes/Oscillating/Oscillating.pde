@@ -3,6 +3,8 @@
 *this is an educative program to help teach students about the properties of sine graphs
 *@author Piero Orderique
 *@date January 03 2020
+*
+*To teach: y = asin(b(x+c))+d , ignoring c and d
 */
 import java.util.ArrayList;
 ArrayList<Dot> dots = new ArrayList<Dot>(0);
@@ -18,7 +20,6 @@ AmplitudeLine myLine = new AmplitudeLine(amplitude);
 AmplitudeLine boundary = new AmplitudeLine(620);
 Button moveButton = new Button(2600, 800, 200, 100, #196E98, "Start");
 Button resetButton = new Button(2600, -800, 200, 100, #BC0606, "RESET");
-
 
 void setup(){
   size(3000,2000);  
@@ -41,6 +42,7 @@ void draw(){
     moveButton.display();
     resetButton.display();
     displayEquation();
+    //displayInstructions();
     for(Dot d : dots){d.display();}
     //does not let amplitude fall below 0 or go above the boundary line
     if(draggable && mouseY-height/2 < radius*0.05 && 
@@ -89,6 +91,13 @@ void displayEquation(){
   textSize(50);
   textAlign(CENTER);
   text(t, 700, -1*800);
+}
+void displayInstructions(){
+  String t = "test";
+  fill(255);
+  textSize(50);
+  textAlign(CENTER);
+  text(t,1800 ,-1*800);
 }
 /*--------------------------------------button updates----------------------------------*/
   void updateButton(Button c){
@@ -141,7 +150,7 @@ void mouseReleased(){
 //For changing frequency
 void keyPressed() {
   if (key == CODED) {
-    if (keyCode == UP && radius <= 100) {
+    if (keyCode == UP && radius <= 100) {  //KeyEvent.VK_UP
       radius += 5;
       updateDots();
     } else if (keyCode == DOWN && radius >= 10) {

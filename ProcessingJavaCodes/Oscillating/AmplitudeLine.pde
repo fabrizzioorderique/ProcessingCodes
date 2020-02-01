@@ -10,7 +10,7 @@ class AmplitudeLine{
   AmplitudeLine(float amp){
     amplitude = amp;
   }
-  //methods
+  //shows the amplitude line
   void display(){
     strokeWeight(2);
     stroke(col);
@@ -19,13 +19,11 @@ class AmplitudeLine{
     rectMode(CENTER);
     rect(0,-1*(amplitude+radius/2+h/2),2*width,h);
   }
-  void changeAmp(float dh){
-    amplitude+=dh;
-  }
-
-  //getters and setters
+  //getters and setters (and changers)
   float getAmp(){return amplitude;}
   float getH(){return h;}
   void setAmp(float a){amplitude = a;}
   void setColor(color c){col = c;}
+  void changeAmp(float dh){amplitude+=dh;}
+
 }

@@ -19,14 +19,12 @@ class Dot {
     fill(255);
     ellipse(xpos,ypos,radius,radius);
   }
-  public void changeY(float amount){
-    ypos += amount;
-  }
-  //getter and setter methods
+  //getter and setter methods and changers
   public float getX(){return xpos;}
   public float getY(){return ypos;} 
   public float getRadius(){return radius;}
   public void setX(float xpos){this.xpos = xpos;}
   public void setY(float ypos){this.ypos = ypos;}
   public void setRadius(float radius){this.radius = radius;}
+  public void changeY(float amount){ypos += amount;}
 }

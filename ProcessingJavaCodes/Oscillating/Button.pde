@@ -37,21 +37,16 @@ class Button{
   }
   //checks if mouse is over a certain color
   boolean mouseOver() {
-    // If processing pixels array is null (we didn't call loadPixels yet)
-    // call loadPixels() to fill processing pixels array 
+    //fills in pixels just in case it wasn't filled already
     if(pixels == null) {
       loadPixels();
       return false;
-    } else {   
-     // Otherwise, if we already get pixels in memory
-     // check if mouse over pixel's color is equal to the given color
-     if(pixels[(mouseY*width) + mouseX] == col) {
+    } else if(pixels[(mouseY*width) + mouseX] == col) {
         return true;
      } else {
         return false;
      }
    }
-  }
 
 
   //getters and setters
