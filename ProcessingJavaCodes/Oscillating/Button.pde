@@ -2,7 +2,7 @@ class Button{
   private float xpos, ypos, w, h;
   private color col;
   int state = 1;
-  String display;
+  String text;
   //Constructor default sets amplitude to 100
   Button(){
     xpos = 0;
@@ -10,7 +10,7 @@ class Button{
     w = 100;
     h =100;
     col = #196E98;
-    display = "Test Button";
+    text = "Test Button";
   }
   //General constructor
   Button(float x, float y, float w, float h, color c, String text){
@@ -19,7 +19,7 @@ class Button{
      this.w = w;
      this.h = h;
      col = c;
-     display = text;
+     this.text = text;
   }
   //methods
   void display(){
@@ -33,7 +33,7 @@ class Button{
     fill(255);
     textSize(50); //defalut size
     textAlign(CENTER);
-    text(display, xpos, -1*ypos);
+    text(text, xpos, -1*ypos);
   }
   //checks if mouse is over a certain color
   boolean mouseOver() {
