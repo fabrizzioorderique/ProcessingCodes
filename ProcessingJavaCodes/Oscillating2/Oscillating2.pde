@@ -4,7 +4,7 @@
 *@author Piero Orderique
 *@date January 03 2020
 *
-*To teach: y = asin(b(x+c))+d , ignoring c and d
+*To teach: y = asin(b(x+c))+d , ignoring d (becasue itself explanatory)
 *
 *NOTE: All non personal methods such as mouseClicked() are all part of the open source
 *      community libraries provdied by https://processing.org/
@@ -13,14 +13,14 @@ import java.util.ArrayList;
 ArrayList<Dot> dots = new ArrayList<Dot>(0);
 float t = 0.0;
 float dt = 0.1;
-float amplitude = 100;
-float frequency = 1.0;
+float amplitude = 100;  //amplitude starts at 100
+float frequency = 1.0;  
 float initRadius = 40;
 float radius = 40;
 boolean canMove = false;
 boolean draggable = false;
 AmplitudeLine myLine = new AmplitudeLine(amplitude);
-AmplitudeLine boundary = new AmplitudeLine(600);
+AmplitudeLine toptopBoundary = new AmplitudeLine(600);
 Button moveButton = new Button(2600, 800, 200, 100, #196E98, "Start");
 Button resetButton = new Button(2600, -800, 200, 100, #BC0606, "RESET");
 
@@ -40,15 +40,15 @@ void draw(){
   pushMatrix();
     translate(0,height/2);
     myLine.display();
-    boundary.setColor(255);
-    boundary.display();
+    topBoundary.setColor(255);
+    topBoundary.display();
     moveButton.display();
     resetButton.display();
     displayEquation();
     displayInstructions();
     //displayInstructions();
     for(Dot d : dots){d.display();}
-    //does not let amplitude fall below 0 or go above the boundary line
+    //does not let amplitude fall below 0 or go above the topBoundary line
     if(draggable && mouseY-height/2 < radius*0.05 && 
        mouseY-height>-1*(height+0.2*myLine.getH()+radius) && 
        -1*(mouseY-height/2)<600){
@@ -66,7 +66,7 @@ void drawAxis(){
   strokeWeight(2);
   translate(0,0);
   stroke(255);
-  line(width/2,height,width/2,boundary.getAmp()-220);
+  line(width/2,height,width/2,topBoundary.getAmp()-220);
   line(0,height/2,width,height/2);
 }
 //adds a reference sine graph
