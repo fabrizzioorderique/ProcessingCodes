@@ -31,8 +31,6 @@ Button moveButton = new Button(2600, 800, 200, 100, #196E98, "Start");
 Button resetButton = new Button(2600, -800, 200, 100, #BC0606, "RESET");
 Slider radiusSlider = new Slider(100,1800,50);
 
-int counter = 0;
-
 void setup(){
   size(3000,2000);  
   //creates the initial, non moving dots 
@@ -42,13 +40,11 @@ void setup(){
   }
 }
 void draw(){
-  //redraws background and axis every time
+  //redraws background, axis, and slider
   background(0);  
   drawAxis();
   radiusSlider.update();
   radiusSlider.display();
-  counter++;
-  //if(counter%10==0){println(mouseX);}
   //starts a matrix translation
   pushMatrix();
     translate(0,height/2);
@@ -63,7 +59,6 @@ void draw(){
     //displays other program essentials
     myLine.display();
     displayEquation();
-    //addReference();
     displayInstructions();
     for(Dot d : dots){d.display();}
     //does not let amplitude fall below 0 or go above the topBoundary line
@@ -78,7 +73,7 @@ void draw(){
       updateDots();
       t += dt;
     }
-  popMatrix();
+  popMatrix();  //end of matrix translation
 }
 /*---------------------------------- cleanup/test methods-------------------------------*/
 //draws the axis
@@ -89,78 +84,86 @@ void drawAxis(){
   line(width/2,height-(bottomBoundary.getAmp()+1020),width/2,topBoundary.getAmp()-300);
   line(0,height/2,width,height/2);
 }
-//adds a reference sine graph
+//TEST METHOD: adds a reference sine graph
 void addReference(){
   int rad = 20;
   for(int i = 0; i < width/rad+10; i++){
     ellipse(i*rad,myLine.getAmp()*sin(i*-5.822),rad,rad);
   }
 }
+//update methods to enact changes in the sine graph
 void updateDots(){
   for(int i = 0; i < dots.size(); i++){
     dots.get(i).setRadius(radius);
     dots.get(i).setY(myLine.getAmp()*sin(frequency*(t+i)));
   }
 }
-void updateShift(){
+void updateShift(int phase){
   for(int i = 0; i < dots.size(); i++){
-    dots.get(i).changeX(10);  
+    dots.get(i).changeX(phase);  
   }
 }
+//STRING DISPLAYS
 void displayEquation(){
+  fill(255);  //white text
   String sign = "";
   if(-1*phaseShift>0){sign = "+";}
-  String t = "Equation: y = "+nf(myLine.getAmp(),0,0)+"sin("+nf(frequency,0,1)
+  String equation = "Equation: y = "+nf(myLine.getAmp(),0,0)+"sin("+nf(frequency,0,1)
               +"x"+sign+nf(-1*phaseShift,0,1)+")";
   String general = "y =   asin(bx + c)";
-  fill(255);
   textSize(50);
   text(general,1900,-1*900);
   textAlign(CENTER);
-  text(t, 1900, -1*800);
+  text(equation, 1900, -1*800);
 }
 void displayInstructions(){
+  fill(255);  //white text, center aligned
+  textAlign(CENTER);
+  //interactivity instructions
   String t1 = "(a) Drag the orange bar to change the amplitude";
   String t2 = "(b) UP and DOWN arrows change the frequency";
   String t3 = "(c) LEFT and RIGHT arrows change phase shift";
   String t4 = "Control Zoom Factor by sliding: "+str(radius);
-  fill(255);
-  textSize(50);
-  textAlign(CENTER);
+  textSize(50);  //relatively large text
   text(t1,700 ,-1*900);
   text(t2,700,-1*825);
   text(t3,700,-1*750);
   text(t4,500,-1*-750);
+  //button key instructions
+  String mbInstruc = "(shift key)";
+  String rbInstruc = "(r key)";
+  textSize(25);  //smaller text
+  text(mbInstruc,moveButton.getX(),-1*(moveButton.getY()-moveButton.getH()+10));
+  text(rbInstruc,resetButton.getX(),-1*(resetButton.getY()-resetButton.getH()+10));
 }
 /*--------------------------------------button updates----------------------------------*/
-  void updateButton(Button c){
-    //resetButton controls
-    if(c == resetButton){
-      moveButton.state = 1;
-      updateButton(moveButton);
-      myLine.setAmp(amplitude);
-      frequency = initFrequency;
-      radius = initRadius;
-      radiusSlider.boxX = 398;
-      frequency = initFrequency;
-      phaseShift = initPhaseShift;
-      for(int i = 0; i < dots.size(); i++){
-        dots.get(i).setX(i*radius); 
-      }
-      updateDots();
-    }
-    //moveButton
-    if(c == moveButton){
-      if(c.state % 2 == 0){
-        canMove = true;
-        c.text = "Stop";
-      }else{
-        canMove = false;
-        c.text = "Start";
-      }
+void updateButton(Button c){
+  //resetButton controls
+  if(c == resetButton){
+    moveButton.state = 1;
+    updateButton(moveButton);
+    myLine.setAmp(amplitude);
+    frequency = initFrequency;
+    radius = initRadius;
+    radiusSlider.boxX = 398;
+    frequency = initFrequency;
+    phaseShift = initPhaseShift;
+    for(int i = 0; i < dots.size(); i++){dots.get(i).setX(i*radius);}
+    updateDots();  //updates dots back to original positions
+  }
+  //moveButton
+  if(c == moveButton){
+    if(c.state % 2 == 0){
+      canMove = true;
+      c.text = "Stop";
+    }else{
+      canMove = false;
+      c.text = "Start";
     }
   }
+}
 /*--------------------------------------action methods----------------------------------*/
+//checks if/which button was clicked
 void mouseClicked(){
   if(moveButton.mouseOver()) {
     //println("Move button clicked");
@@ -173,7 +176,7 @@ void mouseClicked(){
     updateButton(resetButton);
   }
 }
-//draggability of amplitude line
+//controls draggability of amplitude line and slider
 void mouseDragged(){
   //mouseY was translated to mouseY - height/2 due to matrix translations
   //this makes sure that the mouse is within the rectangle boundaries before being dragged
@@ -181,32 +184,45 @@ void mouseDragged(){
      mouseY-height/2<-1*(myLine.getAmp()+radius/2+myLine.getH())){
     draggable = true;
   }
-  //adjusts the heights of the dots based on where user drags myLine
-  updateDots();
+  updateDots();  //updates the heights of the dots based on where user drags myLine
+  //checks to see if slider can move
   if (radiusSlider.canMove) {
     radiusSlider.boxX = mouseX;
     radius = ((mouseX-150)*(100)/(radiusSlider.maxBound-radiusSlider.minBound))+5;  //makes sure radius is between 5 and 105
   }
 }
+//when mouse is released, draggability of amplitude line is set to false
 void mouseReleased(){
   draggable = false; 
 }
-//For changing frequency and phase shift
+//KEY CONTROLS: for frequency and movement control 
 void keyPressed() {
   if (key == CODED) {
     //abnormal rounding errors were occuring so parseFLoat was used to correct it
     if (keyCode == UP && Float.parseFloat(nf(frequency,0,0)) <= 1.99) {  //KeyEvent.VK_UP
+      //println("up key hit");     
       frequency+=0.1;      
       updateDots();
     } else if (keyCode == DOWN && Float.parseFloat(nf(frequency,0,0)) >= -1.99) {
+      //println("down key hit");      
       frequency-=0.1;
       updateDots();
     } else if (keyCode == RIGHT && phaseShift >= -5.99) {
+      //println("right key hit");      
       phaseShift-=0.1;
-      updateShift();
+      updateShift(-10);
     } else if (keyCode == LEFT && phaseShift <= 5.99) {
+      //println("left key hit");
       phaseShift+=0.1;
-      updateShift();
+      updateShift(10);
+    } else if(keyCode == SHIFT){
+      println("shift key hit");
+      moveButton.state++;
+      updateButton(moveButton);
     } 
   }
+  if(key == 'r'){
+    println("r key hit");  
+    updateButton(resetButton);
+  } 
 }

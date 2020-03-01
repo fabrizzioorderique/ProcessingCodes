@@ -49,6 +49,8 @@ class Button{
    }
   //getters and setters
   float getH(){return h;}
+  float getX(){return xpos;}
+  float getY(){return ypos;}
   void setColor(color c){col = c;}
   void setTextSize(int size){textSize(size);}
 }
