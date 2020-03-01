@@ -1,5 +1,5 @@
 /**
-*Oscillations Program
+*Oscillations2 Program
 *this is an educative program to help teach students about the properties of sine graphs
 *@author Piero Orderique
 *@date January 03 2020
@@ -13,40 +13,55 @@ import java.util.ArrayList;
 ArrayList<Dot> dots = new ArrayList<Dot>(0);
 float t = 0.0;
 float dt = 0.1;
-float amplitude = 100;  //amplitude starts at 100
-float frequency = 1.0;  
+float amplitude = 100;  //amplitude line starts at 100
+float initFrequency = 0.5;  
+float frequency = initFrequency;
 float initRadius = 40;
-float radius = 40;
+float radius = initRadius;
+float phaseShift = 0;
 boolean canMove = false;
 boolean draggable = false;
 AmplitudeLine myLine = new AmplitudeLine(amplitude);
-AmplitudeLine toptopBoundary = new AmplitudeLine(600);
+AmplitudeLine topBoundary = new AmplitudeLine(600);
+AmplitudeLine bottomBoundary = new AmplitudeLine(-650);
 Button moveButton = new Button(2600, 800, 200, 100, #196E98, "Start");
 Button resetButton = new Button(2600, -800, 200, 100, #BC0606, "RESET");
+Slider radiusSlider = new Slider(100,1800,50);
+
+int counter = 0;
 
 void setup(){
   size(3000,2000);  
-    //creates the initial, non moving dots 
-    for(int i = 0; i < width/radius; i++){
-      //x coor gets shifted, amplitudes start at different points 
-      dots.add(new Dot(i*radius,myLine.getAmp()*sin(frequency*(t+i)),radius));
-    }
+  //creates the initial, non moving dots 
+  for(int i = 0; i < width/radius; i++){
+    //x coor gets shifted, amplitudes start at different points 
+    dots.add(new Dot(i*radius,myLine.getAmp()*sin(frequency*(t+i)),radius));
+  }
 }
 void draw(){
   //redraws background and axis every time
   background(0);  
   drawAxis();
+  radiusSlider.update();
+  radiusSlider.display();
+  counter++;
+  if(counter%10==0){println(mouseX);}
   //starts a matrix translation
   pushMatrix();
     translate(0,height/2);
-    myLine.display();
+    //displays the boundaries
     topBoundary.setColor(255);
     topBoundary.display();
+    bottomBoundary.setColor(255);
+    bottomBoundary.display();
+    //displays the interactivity buttons
     moveButton.display();
     resetButton.display();
+    //displays other program essentials
+    myLine.display();
     displayEquation();
+    //addReference();
     displayInstructions();
-    //displayInstructions();
     for(Dot d : dots){d.display();}
     //does not let amplitude fall below 0 or go above the topBoundary line
     if(draggable && mouseY-height/2 < radius*0.05 && 
@@ -66,7 +81,7 @@ void drawAxis(){
   strokeWeight(2);
   translate(0,0);
   stroke(255);
-  line(width/2,height,width/2,topBoundary.getAmp()-220);
+  line(width/2,height-(bottomBoundary.getAmp()+1020),width/2,topBoundary.getAmp()-220);
   line(0,height/2,width,height/2);
 }
 //adds a reference sine graph
@@ -82,30 +97,33 @@ void updateDots(){
     dots.get(i).setY(myLine.getAmp()*sin(frequency*(t+i)));
   }
 }
-float roundFloat(float a){
-  a *= 100;
+String roundFloat(float a, int places){
+  String num = nf(a,0,places);
+ /* a *= 100;
   a = (int)a;
   a = (float)a;
-  a/= 100;
-  return a;
+  a/= 100;*/
+  return num;
 }
 void displayEquation(){
-  String t = "Equation: y = "+myLine.getAmp()+"sin("+roundFloat(frequency)+"x)";
+  String t = "Equation: y = "+roundFloat(myLine.getAmp(),0)+"sin("+roundFloat(frequency,1)+"x)";
   fill(255);
   textSize(50);
   textAlign(CENTER);
   text(t, 1900, -1*800);
 }
 void displayInstructions(){
-  String t1 = "UP and DOWN arrows change radius size";
-  String t2 = "LEFT and RIGHT changes the frequency";
+  String t1 = "UP and DOWN arrows change the frequency";
+  String t2 = "LEFT and RIGHT arrows change phase shift";
   String t3 = "Drag the orange bar to change the amplitude";
+  String t4 = "Control Zoom Factor by sliding: "+str(radius);
   fill(255);
   textSize(50);
   textAlign(CENTER);
   text(t1,700 ,-1*900);
   text(t2,700,-1*825);
   text(t3,700,-1*750);
+  text(t4,500,-1*-750);
 }
 /*--------------------------------------button updates----------------------------------*/
   void updateButton(Button c){
@@ -113,8 +131,9 @@ void displayInstructions(){
     if(c == resetButton){
       canMove = false;
       myLine.setAmp(amplitude);
-      frequency = 1;
+      frequency = initFrequency;
       radius = initRadius;
+      radiusSlider.boxX = 398;
       updateDots();
     }
     //moveButton
@@ -151,24 +170,28 @@ void mouseDragged(){
   }
   //adjusts the heights of the dots based on where user drags myLine
   updateDots();
+  if (radiusSlider.canMove) {
+    radiusSlider.boxX = mouseX;
+    radius = ((mouseX-150)*(100)/(radiusSlider.maxBound-radiusSlider.minBound))+5;  //makes sure radius is between 5 and 100
+  }
 }
 void mouseReleased(){
-  draggable = false;
+  draggable = false; 
 }
-//For changing frequency
+//For changing frequency 
 void keyPressed() {
   if (key == CODED) {
-    if (keyCode == UP && radius <= 100) {  //KeyEvent.VK_UP
-      radius += 5;
+    if (keyCode == UP && frequency <= 2) {  //KeyEvent.VK_UP
+      frequency+=0.1;      
       updateDots();
-    } else if (keyCode == DOWN && radius >= 10) {
-      radius -= 5;
-      updateDots();
-    } else if (keyCode == RIGHT && frequency <= 2) {
-      frequency+=0.1;
-      updateDots();
-    } else if (keyCode == LEFT && frequency >= 0) {
+    } else if (keyCode == DOWN && frequency >= 0) {
       frequency-=0.1;
+      updateDots();
+    } else if (keyCode == RIGHT) {
+      
+      updateDots();
+    } else if (keyCode == LEFT ) {
+      
       updateDots();
     } 
   }
