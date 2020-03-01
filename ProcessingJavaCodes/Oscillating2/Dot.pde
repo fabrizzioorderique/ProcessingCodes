@@ -26,5 +26,6 @@ class Dot {
   public void setX(float xpos){this.xpos = xpos;}
   public void setY(float ypos){this.ypos = ypos;}
   public void setRadius(float radius){this.radius = radius;}
+  public void changeX(float amount){xpos += amount;}
   public void changeY(float amount){ypos += amount;}
 }

@@ -8,6 +8,8 @@
 *
 *NOTE: All non personal methods such as mouseClicked() are all part of the open source
 *      community libraries provdied by https://processing.org/
+* TODO: 
+* make a connecting line between dots
 */
 import java.util.ArrayList;
 ArrayList<Dot> dots = new ArrayList<Dot>(0);
@@ -18,12 +20,13 @@ float initFrequency = 0.5;
 float frequency = initFrequency;
 float initRadius = 40;
 float radius = initRadius;
-float phaseShift = 0;
+float initPhaseShift = 0;
+float phaseShift = initPhaseShift;
 boolean canMove = false;
 boolean draggable = false;
-AmplitudeLine myLine = new AmplitudeLine(amplitude);
-AmplitudeLine topBoundary = new AmplitudeLine(600);
-AmplitudeLine bottomBoundary = new AmplitudeLine(-650);
+AmplitudeLine myLine = new AmplitudeLine(amplitude,false);
+AmplitudeLine topBoundary = new AmplitudeLine(650,true);
+AmplitudeLine bottomBoundary = new AmplitudeLine(-650,true);
 Button moveButton = new Button(2600, 800, 200, 100, #196E98, "Start");
 Button resetButton = new Button(2600, -800, 200, 100, #BC0606, "RESET");
 Slider radiusSlider = new Slider(100,1800,50);
@@ -35,7 +38,7 @@ void setup(){
   //creates the initial, non moving dots 
   for(int i = 0; i < width/radius; i++){
     //x coor gets shifted, amplitudes start at different points 
-    dots.add(new Dot(i*radius,myLine.getAmp()*sin(frequency*(t+i)+phaseShift),radius));
+    dots.add(new Dot(i*radius,myLine.getAmp()*sin(frequency*(t+i)),radius));
   }
 }
 void draw(){
@@ -71,9 +74,11 @@ void draw(){
     }
     //addReference();
     //allows movement when "canMove" is enabled
-    if(canMove){updateDots();}
+    if(canMove){
+      updateDots();
+      t += dt;
+    }
   popMatrix();
-  t += dt;
 }
 /*---------------------------------- cleanup/test methods-------------------------------*/
 //draws the axis
@@ -81,7 +86,7 @@ void drawAxis(){
   strokeWeight(2);
   translate(0,0);
   stroke(255);
-  line(width/2,height-(bottomBoundary.getAmp()+1020),width/2,topBoundary.getAmp()-220);
+  line(width/2,height-(bottomBoundary.getAmp()+1020),width/2,topBoundary.getAmp()-300);
   line(0,height/2,width,height/2);
 }
 //adds a reference sine graph
@@ -94,20 +99,30 @@ void addReference(){
 void updateDots(){
   for(int i = 0; i < dots.size(); i++){
     dots.get(i).setRadius(radius);
-    dots.get(i).setY(myLine.getAmp()*sin(frequency*(t+i+phaseShift)));
+    dots.get(i).setY(myLine.getAmp()*sin(frequency*(t+i)));
+  }
+}
+void updateShift(){
+  for(int i = 0; i < dots.size(); i++){
+    dots.get(i).changeX(10);  
   }
 }
 void displayEquation(){
-  String t = "Equation: y = "+nf(myLine.getAmp(),0,0)+"sin("+nf(frequency,0,1)+"x+"+nf(phaseShift,0,1)+")";
+  String sign = "";
+  if(-1*phaseShift>0){sign = "+";}
+  String t = "Equation: y = "+nf(myLine.getAmp(),0,0)+"sin("+nf(frequency,0,1)
+              +"x"+sign+nf(-1*phaseShift,0,1)+")";
+  String general = "y =   asin(bx + c)";
   fill(255);
   textSize(50);
+  text(general,1900,-1*900);
   textAlign(CENTER);
   text(t, 1900, -1*800);
 }
 void displayInstructions(){
-  String t1 = "UP and DOWN arrows change the frequency";
-  String t2 = "LEFT and RIGHT arrows change phase shift";
-  String t3 = "Drag the orange bar to change the amplitude";
+  String t1 = "(a) Drag the orange bar to change the amplitude";
+  String t2 = "(b) UP and DOWN arrows change the frequency";
+  String t3 = "(c) LEFT and RIGHT arrows change phase shift";
   String t4 = "Control Zoom Factor by sliding: "+str(radius);
   fill(255);
   textSize(50);
@@ -119,15 +134,19 @@ void displayInstructions(){
 }
 /*--------------------------------------button updates----------------------------------*/
   void updateButton(Button c){
-    //resetButton
+    //resetButton controls
     if(c == resetButton){
-      canMove = false;
+      moveButton.state = 1;
+      updateButton(moveButton);
       myLine.setAmp(amplitude);
       frequency = initFrequency;
       radius = initRadius;
       radiusSlider.boxX = 398;
       frequency = initFrequency;
-      phaseShift = 0;
+      phaseShift = initPhaseShift;
+      for(int i = 0; i < dots.size(); i++){
+        dots.get(i).setX(i*radius); 
+      }
       updateDots();
     }
     //moveButton
@@ -137,7 +156,7 @@ void displayInstructions(){
         c.text = "Stop";
       }else{
         canMove = false;
-        c.text = "start";
+        c.text = "Start";
       }
     }
   }
@@ -166,7 +185,7 @@ void mouseDragged(){
   updateDots();
   if (radiusSlider.canMove) {
     radiusSlider.boxX = mouseX;
-    radius = ((mouseX-150)*(100)/(radiusSlider.maxBound-radiusSlider.minBound))+5;  //makes sure radius is between 5 and 100
+    radius = ((mouseX-150)*(100)/(radiusSlider.maxBound-radiusSlider.minBound))+5;  //makes sure radius is between 5 and 105
   }
 }
 void mouseReleased(){
@@ -175,18 +194,19 @@ void mouseReleased(){
 //For changing frequency and phase shift
 void keyPressed() {
   if (key == CODED) {
+    //abnormal rounding errors were occuring so parseFLoat was used to correct it
     if (keyCode == UP && Float.parseFloat(nf(frequency,0,0)) <= 1.99) {  //KeyEvent.VK_UP
       frequency+=0.1;      
       updateDots();
     } else if (keyCode == DOWN && Float.parseFloat(nf(frequency,0,0)) >= -1.99) {
       frequency-=0.1;
       updateDots();
-    } else if (keyCode == RIGHT && phaseShift <= 10.99) {
-      phaseShift+=0.1;
-      updateDots();
-    } else if (keyCode == LEFT && phaseShift >= -9.99) {
+    } else if (keyCode == RIGHT && phaseShift >= -5.99) {
       phaseShift-=0.1;
-      updateDots();
+      updateShift();
+    } else if (keyCode == LEFT && phaseShift <= 5.99) {
+      phaseShift+=0.1;
+      updateShift();
     } 
   }
 }

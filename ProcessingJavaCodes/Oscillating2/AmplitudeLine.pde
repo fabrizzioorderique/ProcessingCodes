@@ -2,14 +2,16 @@ class AmplitudeLine{
   private float amplitude;
   private float h = 15; //the height, or "thickness" of the rectangular line
   private color col = #FF9B17;
+  private boolean locked;
   //add fixed boolean, only true for THE REAL ONE
   //Constructor default sets amplitude to 100
   AmplitudeLine(){
     amplitude = 100;
   }
   //General constructor
-  AmplitudeLine(float amp){
+  AmplitudeLine(float amp, boolean l){
     amplitude = amp;
+    locked = l;
   }
   //shows the amplitude line
   void display(){
@@ -18,7 +20,11 @@ class AmplitudeLine{
     fill(col);
     //line(0,-1*(amplitude+radius/2),width,-1*(amplitude+radius/2));
     rectMode(CENTER);
-    rect(0,-1*(amplitude+radius/2+h/2),2*width,h);
+    if(locked){
+      rect(0,-1*(amplitude+h/2),2*width,h);
+    }else{
+      rect(0,-1*(amplitude+radius/2+h/2),2*width,h);
+    }
   }
   //getters and setters (and changers)
   float getAmp(){return amplitude;}

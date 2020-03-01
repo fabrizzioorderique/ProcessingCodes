@@ -1,5 +1,5 @@
-//NOTE: This code was copied from the Processing exmaples folder intended for 
-//open source use and then was modified to fit needs of the program
+//NOTE: This code was inspired by the open source "handles" program
+//      featured by Procesisng. 
 class Slider {
   
   int x, y;
