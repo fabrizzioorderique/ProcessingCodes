@@ -2,6 +2,7 @@ class AmplitudeLine{
   private float amplitude;
   private float h = 15; //the height, or "thickness" of the rectangular line
   private color col = #FF9B17;
+  //add fixed boolean, only true for THE REAL ONE
   //Constructor default sets amplitude to 100
   AmplitudeLine(){
     amplitude = 100;

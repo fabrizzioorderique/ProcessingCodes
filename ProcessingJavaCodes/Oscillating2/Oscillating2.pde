@@ -35,7 +35,7 @@ void setup(){
   //creates the initial, non moving dots 
   for(int i = 0; i < width/radius; i++){
     //x coor gets shifted, amplitudes start at different points 
-    dots.add(new Dot(i*radius,myLine.getAmp()*sin(frequency*(t+i)),radius));
+    dots.add(new Dot(i*radius,myLine.getAmp()*sin(frequency*(t+i)+phaseShift),radius));
   }
 }
 void draw(){
@@ -45,7 +45,7 @@ void draw(){
   radiusSlider.update();
   radiusSlider.display();
   counter++;
-  if(counter%10==0){println(mouseX);}
+  //if(counter%10==0){println(mouseX);}
   //starts a matrix translation
   pushMatrix();
     translate(0,height/2);
@@ -94,19 +94,11 @@ void addReference(){
 void updateDots(){
   for(int i = 0; i < dots.size(); i++){
     dots.get(i).setRadius(radius);
-    dots.get(i).setY(myLine.getAmp()*sin(frequency*(t+i)));
+    dots.get(i).setY(myLine.getAmp()*sin(frequency*(t+i+phaseShift)));
   }
 }
-String roundFloat(float a, int places){
-  String num = nf(a,0,places);
- /* a *= 100;
-  a = (int)a;
-  a = (float)a;
-  a/= 100;*/
-  return num;
-}
 void displayEquation(){
-  String t = "Equation: y = "+roundFloat(myLine.getAmp(),0)+"sin("+roundFloat(frequency,1)+"x)";
+  String t = "Equation: y = "+nf(myLine.getAmp(),0,0)+"sin("+nf(frequency,0,1)+"x+"+nf(phaseShift,0,1)+")";
   fill(255);
   textSize(50);
   textAlign(CENTER);
@@ -134,6 +126,8 @@ void displayInstructions(){
       frequency = initFrequency;
       radius = initRadius;
       radiusSlider.boxX = 398;
+      frequency = initFrequency;
+      phaseShift = 0;
       updateDots();
     }
     //moveButton
@@ -178,20 +172,20 @@ void mouseDragged(){
 void mouseReleased(){
   draggable = false; 
 }
-//For changing frequency 
+//For changing frequency and phase shift
 void keyPressed() {
   if (key == CODED) {
-    if (keyCode == UP && frequency <= 2) {  //KeyEvent.VK_UP
+    if (keyCode == UP && Float.parseFloat(nf(frequency,0,0)) <= 1.99) {  //KeyEvent.VK_UP
       frequency+=0.1;      
       updateDots();
-    } else if (keyCode == DOWN && frequency >= 0) {
+    } else if (keyCode == DOWN && Float.parseFloat(nf(frequency,0,0)) >= -1.99) {
       frequency-=0.1;
       updateDots();
-    } else if (keyCode == RIGHT) {
-      
+    } else if (keyCode == RIGHT && phaseShift <= 10.99) {
+      phaseShift+=0.1;
       updateDots();
-    } else if (keyCode == LEFT ) {
-      
+    } else if (keyCode == LEFT && phaseShift >= -9.99) {
+      phaseShift-=0.1;
       updateDots();
     } 
   }
