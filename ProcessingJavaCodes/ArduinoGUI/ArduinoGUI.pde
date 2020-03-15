@@ -1,24 +1,18 @@
 import controlP5.*; //import ControlP5 library
 import processing.serial.*;
-
 Serial port;
 
 ControlP5 cp5; //create ControlP5 object
 PFont font;
 
-void setup(){ //same as arduino program
-
-  size(300, 450);    //window size, (width, height)
-  
+void setup(){
+  size(300, 450);  
   printArray(Serial.list());   //prints all available serial ports
-  
-  port = new Serial(this, "COM3", 9600);  //i have connected arduino to com3, it would be different in linux and mac os
-  
-  //lets add buton to empty window
-  
+  port = new Serial(this, "COM5", 9600);  //i have connected arduino to com5
   cp5 = new ControlP5(this);
-  font = createFont("calibri light bold", 20);    // custom fonts for buttons and title
+  font = createFont("calibri", 20);    // custom fonts for buttons and title
   
+  //create buttons
   cp5.addButton("red")     //"red" is the name of button
     .setPosition(100, 50)  //x and y coordinates of upper left corner of button
     .setSize(120, 70)      //(width, height)
@@ -31,7 +25,7 @@ void setup(){ //same as arduino program
     .setFont(font)
   ;
 
-  cp5.addButton("blue")     //"blue" is the name of button
+  cp5.addButton("green")     //"blue" is the name of button
     .setPosition(100, 250)  //x and y coordinates of upper left corner of button
     .setSize(120, 70)      //(width, height)
     .setFont(font)
@@ -65,8 +59,8 @@ void yellow(){
   port.write('y');
 }
 
-void blue(){
-  port.write('b');
+void green(){
+  port.write('g');
 }
 
 void alloff(){
