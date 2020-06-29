@@ -33,6 +33,7 @@ class Character{
   public float getX(){ return Float.parseFloat(nf(xpos, 0, 2)); } //returns 2 decimal places
   public float getY() { return Float.parseFloat(nf(ypos, 0, 2)); }
   public float getHeight() { return hgt; }
+  public float getWidth() { return wdth; }
   public float getOgX(){ return Float.parseFloat(nf(ogX, 0, 2)); } //returns 2 decimal places
   public float getOgY() { return Float.parseFloat(nf(ogY, 0, 2)); }
   public void setX(float x){ xpos = x; }  
