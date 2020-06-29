@@ -12,6 +12,7 @@ This Sine Wave Visualizer Program is a simple learning tool to aid students in t
 - "Zoom in" feature for better visualization
 
 ### How to Use
+- Run Sine_Wave_Visualizer.pde
 - Clicking the start/stop button will enable the "dots" that make up the sine wave to move in normal oscillatory motion
 - User can click and drag on the orange bar on the top of the screen to change the amplitude of the sine wave
 - Using the LEFT and RIGHT arrow keys allow the user to increase/decrease the period of the sine wave
