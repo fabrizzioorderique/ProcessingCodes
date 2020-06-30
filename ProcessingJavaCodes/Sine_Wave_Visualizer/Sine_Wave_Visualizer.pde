@@ -124,7 +124,7 @@ void displayInstructions(){
         c.text = "Stop";
       }else{
         canMove = false;
-        c.text = "start";
+        c.text = "Start";
       }
     }
   }
