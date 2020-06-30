@@ -12,10 +12,11 @@ This Sine Wave Visualizer Program is a simple learning tool to aid students in t
 - "Zoom in" feature for better visualization
 
 ### How to Download Project and Run Program:
-- 1) Open Command Prompt where you want to download project in 
-- 2) Run this command: "git svn checkout https://github.com/pforderique/ProcessingCodes/trunk/ProcessingJavaCodes/Sine_Wave_Visualizer"
-- 3) Wait for project to show locally and then run Sine_Wave_Visualizer.pde
+1) Open Command Prompt where you want to download project in 
+2) Run this command: "git svn checkout https://github.com/pforderique/ProcessingCodes/trunk/ProcessingJavaCodes/Sine_Wave_Visualizer"
+3) Wait for project to show locally and then run Sine_Wave_Visualizer.pde
 
+### Using the Program
 - Clicking the start/stop button will enable the "dots" that make up the sine wave to move in normal oscillatory motion
 - User can click and drag on the orange bar on the top of the screen to change the amplitude of the sine wave
 - Using the LEFT and RIGHT arrow keys allow the user to increase/decrease the period of the sine wave
