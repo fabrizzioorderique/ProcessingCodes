@@ -1,6 +1,8 @@
 # Sine Wave Visualizer Program
 Creator: Piero Orderique
+
 ![OrderiqueStudios](https://pforderique.github.io/images/orderique_studios_logo_text_smallerer.png)
+
 This Sine Wave Visualizer Program is a simple learning tool to aid students in their understanding of sine wave manipulation. Written in Java using the Processing IDE, the easy-to-use UI permits students in any grade level to interact with a graphic display of a sine wave and experiment changing its features such as amplitude and period. The program focuses on 2 parts of the general sine equation, y = Asin(B(x+C))+D, ignoring the C and D variables. An explanation for this is offered below.
 
 ### Features
@@ -10,6 +12,7 @@ This Sine Wave Visualizer Program is a simple learning tool to aid students in t
 - "Zoom in" feature for better visualization
 
 ### How to Use
+- Run Sine_Wave_Visualizer.pde
 - Clicking the start/stop button will enable the "dots" that make up the sine wave to move in normal oscillatory motion
 - User can click and drag on the orange bar on the top of the screen to change the amplitude of the sine wave
 - Using the LEFT and RIGHT arrow keys allow the user to increase/decrease the period of the sine wave
