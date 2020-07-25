@@ -10,8 +10,8 @@ import random as r
 from time import sleep
 
 #setup variables
-width = 2000
-height = 1000
+width = 1000
+height = 2500
 totalElements = 2000
 
 #setup bar class
