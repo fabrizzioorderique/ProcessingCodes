@@ -11,7 +11,8 @@ int GL_COLOR = 220;
 int GL_SIZE = 50;
 
 void setup(){
-  size(800,400);
+  //size(800,800);
+  fullScreen();
   background(255);
 }
 
@@ -24,7 +25,6 @@ void draw(){
 
 void mouseClicked(){
   int currentColor = get(mouseX,mouseY); //returns -1 if white
-  print(currentColor);
   if(currentColor == -1){
     fillGrid(mouseX,mouseY,0);
   }else if(currentColor == -16777216){
@@ -41,5 +41,10 @@ void fillGrid(float x, float y, color c){
   int rectX = (int)(x/50)*50+25;
   int rectY = (int)(y/50)*50+25;
   rect(rectX,rectY,50-GL_WIDTH/2,50-GL_WIDTH/2);
+}
 
+void keyPressed(){
+  if (keyCode == 'R'){
+    background(255);
+  }
 }
