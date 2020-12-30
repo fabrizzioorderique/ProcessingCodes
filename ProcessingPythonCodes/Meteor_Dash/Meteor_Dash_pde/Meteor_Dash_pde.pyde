@@ -13,8 +13,8 @@ class TitleScreen(object):
         self.play_sign = loadImage(r"C:\Users\fabri\OneDrive\Documents\Programming\Processing\ProcessingPythonCodes\Meteor_Dash\Meteor_Dash_pde\data\playsign.jpg")
         self.play_button_on = loadImage(r"C:\Users\fabri\OneDrive\Documents\Programming\Processing\ProcessingPythonCodes\Meteor_Dash\Meteor_Dash_pde\data\play_button_on.jpg")
         self.play_button_off = loadImage(r"C:\Users\fabri\OneDrive\Documents\Programming\Processing\ProcessingPythonCodes\Meteor_Dash\Meteor_Dash_pde\data\play_button_off.jpg")
-        self.play_button_on.resize(300,300)
-        self.play_button_off.resize(300,300)
+        self.play_button_on.resize(320,300)
+        self.play_button_off.resize(330,300)
         self.rocket = loadImage(r"C:\Users\fabri\OneDrive\Documents\Programming\Processing\ProcessingPythonCodes\Meteor_Dash\Meteor_Dash_pde\data\rocket.png")
         
     def display(self):
@@ -25,7 +25,7 @@ class TitleScreen(object):
         else: rocket_bounce = 0
         
         # mess around with heights 
-        logo_height = height*1/8
+        logo_height = height*1/10
         play_sign_height = logo_height + self.logo.height + 150
         self.bx = self._central_x(self.play_button_on)
         self.by = play_sign_height + self.play_sign.height + 50    # we need bx and by for mouse clicked func
@@ -51,14 +51,24 @@ class TitleScreen(object):
     def _central_x(self, img):
         '''returns x coordinate need to centralize image on the x axis'''
         return width/2 - img.width/2
-            
+###################################################################
+class GameScreen(object):
+    def __init__(self):
+        self.rocket = loadImage(r"C:\Users\fabri\OneDrive\Documents\Programming\Processing\ProcessingPythonCodes\Meteor_Dash\Meteor_Dash_pde\data\rocket.png")
+    
+    def update(self):
+        pass
+
 ###################################################################
 # initialize game variables
 width = 1350
 height = 1800
+
 showTitleScreen = True
 title_screen = TitleScreen()
+
 gameStarted = False
+game_screen = GameScreen()
 
 
 def setup():
@@ -67,9 +77,15 @@ def setup():
     noLoop()
     
 def draw():
-    background(0) # dark space
+    global showTitleScreen
+    
+    background(0)
     if showTitleScreen: title_screen.display()
     loop()
     
 def mouseClicked():
-    if showTitleScreen and title_screen.over_button(): showTitleScreen
+    global showTitleScreen, gameStarted
+    if showTitleScreen and title_screen.over_button(): showTitleScreen, gameStarted = False, True
+    
+def keyPressed():
+    pass
